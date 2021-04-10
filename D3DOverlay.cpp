@@ -50,16 +50,19 @@ namespace D3DOverlay
 
 	bool COverlay::CreateOverlay(LPCSTR WindowClassName, LPCSTR WindowName)
 	{
+		m_WindowWidth = (FLOAT)GetSystemMetrics(SM_CXSCREEN);
+		m_WindowHeight = (FLOAT)GetSystemMetrics(SM_CYSCREEN);
+
 		ZeroMemory(&m_WindowClass, sizeof(WNDCLASSEX));
 		m_WindowClass = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0, 0, GetModuleHandle(nullptr), NULL, NULL, NULL, NULL, WindowClassName, NULL };
 		RegisterClassEx(&m_WindowClass);
 
-		m_Window = CreateWindowEx(WS_EX_TOPMOST | WS_EX_LAYERED | WS_EX_TOOLWINDOW, m_WindowClass.lpszClassName, WindowName, WS_POPUP, 1, 1, 1, 1, 0, 0, 0, 0);
+		m_Window = CreateWindowEx(WS_EX_TOPMOST | WS_EX_LAYERED | WS_EX_TOOLWINDOW, m_WindowClass.lpszClassName, WindowName, WS_POPUP, 0, 0, m_WindowWidth, m_WindowHeight, 0, 0, 0, 0);
 		if (!m_Window)
 			return false;
 
 		SetLayeredWindowAttributes(m_Window, 0, 0, LWA_ALPHA);
-		SetLayeredWindowAttributes(m_Window, 0, RGB(1, 0, 1), LWA_COLORKEY);
+		SetLayeredWindowAttributes(m_Window, 0, RGB(0, 0, 0), LWA_COLORKEY);
 
 		ShowWindow(m_Window, SW_SHOW);
 		MARGINS Margins{ -1 };
@@ -102,17 +105,6 @@ namespace D3DOverlay
 
 			if (!m_TargetWindow || !IsWindow(m_TargetWindow))
 				return false;
-
-			RECT Rect{ };
-			GetClientRect(m_TargetWindow, &Rect);
-			if (m_OldRect.left != Rect.left ||
-				m_OldRect.top != Rect.top ||
-				m_OldRect.right != Rect.right ||
-				m_OldRect.bottom != Rect.bottom)
-			{
-				SetWindowPos(m_Window, HWND_TOPMOST, Rect.left, Rect.top, Rect.right, Rect.bottom, SWP_NOREDRAW);
-				m_OldRect = Rect;
-			}
 
 			ImGui_ImplDX9_NewFrame();
 			ImGui_ImplWin32_NewFrame();
@@ -188,6 +180,13 @@ namespace D3DOverlay
 
 			case WM_SIZE:
 			{
+				if (m_D3D && m_D3Device)
+				{
+					m_D3D->Release();
+					m_D3Device->Release();
+					CreateDeviceD3D();
+				}
+
 				m_WindowWidth = (FLOAT)LOWORD(aLParam);
 				m_WindowHeight = (FLOAT)HIWORD(aLParam);
 				break;
