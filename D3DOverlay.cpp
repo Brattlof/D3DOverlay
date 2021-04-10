@@ -177,20 +177,6 @@ namespace D3DOverlay
 	{
 		switch (aMsg)
 		{
-
-			case WM_SIZE:
-			{
-				if (m_D3D && m_D3Device)
-				{
-					m_D3D->Release();
-					m_D3Device->Release();
-					CreateDeviceD3D();
-				}
-
-				m_WindowWidth = (FLOAT)LOWORD(aLParam);
-				m_WindowHeight = (FLOAT)HIWORD(aLParam);
-				break;
-			}
 			case WM_DESTROY:
 			{
 				PostQuitMessage(0);
