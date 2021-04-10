@@ -50,8 +50,8 @@ namespace D3DOverlay
 
 	bool COverlay::CreateOverlay(LPCSTR WindowClassName, LPCSTR WindowName)
 	{
-		m_WindowWidth = (FLOAT)GetSystemMetrics(SM_CXSCREEN);
-		m_WindowHeight = (FLOAT)GetSystemMetrics(SM_CYSCREEN);
+		m_WindowWidth = GetSystemMetrics(SM_CXSCREEN);
+		m_WindowHeight = GetSystemMetrics(SM_CYSCREEN);
 
 		ZeroMemory(&m_WindowClass, sizeof(WNDCLASSEX));
 		m_WindowClass = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0, 0, GetModuleHandle(nullptr), NULL, NULL, NULL, NULL, WindowClassName, NULL };
