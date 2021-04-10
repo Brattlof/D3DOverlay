@@ -160,8 +160,7 @@ namespace D3DOverlay
 			ImGui::EndFrame();
 			ImGui::Render();
 
-			D3DCOLOR clear_color = D3DCOLOR_RGBA(0, 0, 0, 0);
-			m_D3Device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, clear_color, 1.f, 0);
+			m_D3Device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0x00000000, 1.f, 0);
 
 			//	If it's not D3D_OK
 			if (m_D3Device->BeginScene() >= 0)
