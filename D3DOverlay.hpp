@@ -36,7 +36,7 @@ namespace D3DOverlay
 
 	public:
 		static bool Init(const HWND TargetWindow, LPCSTR WindowClassName, LPCSTR WindowName);
-		static bool Update();
+		static bool Update(bool MenuOpen);
 		static void SetUserRender(const std::function<void(int, int)> UserRender);
 		static void CleanupOverlay();
 	};

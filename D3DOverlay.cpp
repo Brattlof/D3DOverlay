@@ -36,7 +36,7 @@ namespace D3DOverlay
 		if (!CreateDeviceD3D())
 		{
 			CleanupOverlay();
-			Log(_("Failed Creating D3D Device"));
+			Log(_("Failed creating D3D device"));
 			return false;
 		}
 
@@ -91,7 +91,7 @@ namespace D3DOverlay
 		return true;
 	}
 
-	bool COverlay::Update()
+	bool COverlay::Update(bool MenuOpen)
 	{
 		if (m_Window)
 		{
@@ -105,6 +105,15 @@ namespace D3DOverlay
 
 			if (!m_TargetWindow || !IsWindow(m_TargetWindow))
 				return false;
+
+			if (MenuOpen)
+			{
+				SetWindowLong(m_Window, GWL_EXSTYLE, WS_EX_LAYERED | WS_EX_TOOLWINDOW);
+			}
+			else
+			{
+				SetWindowLong(m_Window, GWL_EXSTYLE, WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW);
+			}
 
 			ImGui_ImplDX9_NewFrame();
 			ImGui_ImplWin32_NewFrame();
