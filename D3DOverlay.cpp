@@ -45,6 +45,8 @@ namespace D3DOverlay
 		ImGui_ImplWin32_Init(m_Window);
 		ImGui_ImplDX9_Init(m_D3Device);
 
+		Log(_("Created overlay successfully"));
+
 		return true;
 	}
 
