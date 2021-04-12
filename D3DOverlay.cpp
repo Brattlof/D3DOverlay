@@ -81,10 +81,10 @@ bool D3DOverlay::CreateDeviceD3D()
 		return false;
 
 	ZeroMemory(&m_D3Parameters, sizeof(m_D3Parameters));
-	m_D3Parameters.Windowed = TRUE;
+	m_D3Parameters.Windowed = true;
 	m_D3Parameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	m_D3Parameters.BackBufferFormat = D3DFMT_A8R8G8B8;
-	m_D3Parameters.EnableAutoDepthStencil = TRUE;
+	m_D3Parameters.EnableAutoDepthStencil = true;
 	m_D3Parameters.AutoDepthStencilFormat = D3DFMT_D16;
 	m_D3Parameters.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 
