@@ -40,5 +40,6 @@ public:
 
 	static void DrawString(float x, float y, ImU32 Color, std::string String);
 	static void DrawRect(float x, float y, float w, float h, ImU32 Color, float Thickness);
+	static void DrawFilledRect(float x, float y, float w, float h, ImU32 Color);
 	static void DrawCircle(float x, float y, float Radius, ImU32 Color, int Segments);
 };

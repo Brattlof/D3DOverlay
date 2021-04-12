@@ -20,7 +20,11 @@ D3DPRESENT_PARAMETERS D3DOverlay::m_D3Parameters;
 bool D3DOverlay::Init(const HWND TargetWindow, LPCSTR WindowClassName, LPCSTR WindowName)
 {
 	if (!TargetWindow || !IsWindow(TargetWindow))
+	{
+		CleanupOverlay();
+		Log(_("Invalid target window"));
 		return false;
+	}
 
 	m_TargetWindow = TargetWindow;
 
@@ -212,12 +216,13 @@ void D3DOverlay::SetUserRender(const std::function<void(int, int)> UserRender)
 
 void D3DOverlay::CleanupOverlay()
 {
-	ImGui_ImplDX9_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
-
 	if (m_D3Device)
+	{
+		ImGui_ImplDX9_Shutdown();
+		ImGui_ImplWin32_Shutdown();
+		ImGui::DestroyContext();
 		m_D3Device->Release();
+	}
 
 	if (m_D3D)
 		m_D3D->Release();
@@ -236,6 +241,11 @@ void D3DOverlay::DrawString(float x, float y, ImU32 Color, std::string String)
 void D3DOverlay::DrawRect(float x, float y, float w, float h, ImU32 Color, float Thickness)
 {
 	ImGui::GetBackgroundDrawList()->AddRect(ImVec2(x, y), ImVec2(x + w, y + h), Color, 0, 0, Thickness);
+}
+
+void D3DOverlay::DrawFilledRect(float x, float y, float w, float h, ImU32 Color)
+{
+	ImGui::GetOverlayDrawList()->AddRectFilled(ImVec2(x, y), ImVec2(x + w, y + h), Color);
 }
 
 void D3DOverlay::DrawCircle(float x, float y, float Radius, ImU32 Color, int Segments)
