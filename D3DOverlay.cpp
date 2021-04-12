@@ -65,7 +65,7 @@ bool D3DOverlay::CreateOverlay(LPCSTR WindowClassName, LPCSTR WindowName)
 	MARGINS Margin = { -1 };
 	DwmExtendFrameIntoClientArea(m_Window, &Margin);
 
-	ShowWindow(m_Window, SW_SHOW);
+	ShowWindow(m_Window, SW_SHOWNORMAL);
 	UpdateWindow(m_Window);
 
 	return true;
