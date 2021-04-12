@@ -54,19 +54,18 @@ bool D3DOverlay::CreateOverlay(LPCSTR WindowClassName, LPCSTR WindowName)
 	m_WindowHeight = GetSystemMetrics(SM_CYSCREEN);
 
 	ZeroMemory(&m_WindowClass, sizeof(WNDCLASSEX));
-	m_WindowClass = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0, 0, GetModuleHandle(nullptr), NULL, NULL, NULL, NULL, WindowClassName, NULL };
+	m_WindowClass = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0, 0, GetModuleHandle(nullptr), 0, 0, 0, 0, WindowClassName, 0 };
 	RegisterClassEx(&m_WindowClass);
 
 	m_Window = CreateWindowEx(WS_EX_TOPMOST | WS_EX_LAYERED | WS_EX_TOOLWINDOW, m_WindowClass.lpszClassName, WindowName, WS_POPUP, 0, 0, m_WindowWidth, m_WindowHeight, 0, 0, 0, 0);
 	if (!m_Window)
 		return false;
 
-	SetLayeredWindowAttributes(m_Window, 0, 0, LWA_ALPHA);
-	SetLayeredWindowAttributes(m_Window, 0, RGB(0, 0, 0), LWA_COLORKEY);
+	SetLayeredWindowAttributes(m_Window, RGB(0, 0, 0), 255, LWA_ALPHA);
+	MARGINS Margin = { -1 };
+	DwmExtendFrameIntoClientArea(m_Window, &Margin);
 
 	ShowWindow(m_Window, SW_SHOW);
-	MARGINS Margins{ -1 };
-	DwmExtendFrameIntoClientArea(m_Window, &Margins);
 	UpdateWindow(m_Window);
 
 	return true;
@@ -80,7 +79,7 @@ bool D3DOverlay::CreateDeviceD3D()
 	ZeroMemory(&m_D3Parameters, sizeof(m_D3Parameters));
 	m_D3Parameters.Windowed = TRUE;
 	m_D3Parameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	m_D3Parameters.BackBufferFormat = D3DFMT_UNKNOWN;
+	m_D3Parameters.BackBufferFormat = D3DFMT_A8R8G8B8;
 	m_D3Parameters.EnableAutoDepthStencil = TRUE;
 	m_D3Parameters.AutoDepthStencilFormat = D3DFMT_D16;
 	m_D3Parameters.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
@@ -161,7 +160,7 @@ bool D3DOverlay::Update(bool MenuOpen)
 		ImGui::EndFrame();
 		ImGui::Render();
 
-		m_D3Device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0x00000000, 1.f, 0);
+		m_D3Device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 0), 1.f, 0);
 
 		//	If it's not D3D_OK
 		if (m_D3Device->BeginScene() >= 0)
